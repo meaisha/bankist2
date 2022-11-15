@@ -2,84 +2,19 @@
 
 ///////////////////////////////////////
 
-// selecting elements
-console.log(document.documentElement);
-console.log(document.head);
-console.log(document.body);
-
-document.querySelector('header');
 const allSections = document.querySelectorAll('.section');
-console.log(allSections);
-
-document.getElementById('section--1');
-const allButtons = document.getElementsByTagName('button');
-console.log(allButtons);
-
-const allBtns = document.getElementsByClassName('btn');
-console.log(allBtns);
-
 const header = document.querySelector('.header');
-//creating and inserting elements
-const message = document.createElement('div');
-message.classList.add('cookie-message');
-message.innerHTML = `
-We use cookies for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button> 
-`;
-
-//header.prepend(message); // first child
-header.append(message); // last child
-
-//header.append(message.cloneNode(true)); // clones a node
-header.before(message);
-header.after(message);
-
-document.querySelector('.btn--close-cookie').addEventListener('click', () => {
-  message.remove();
-});
-
-// Inline Styles
-message.style.backgroundColor = '#37383d';
-message.style.width = '120%';
-
-// get hiddent styles
-console.log(getComputedStyle(message).color);
-const messageHeight =
-  Number.parseFloat(getComputedStyle(message).height) + 40 + 'px';
-
-console.log(messageHeight);
-
-document.documentElement.style.setProperty('--color-primary', 'orangered');
-
-// Attributes
 const logo = document.querySelector('.nav__logo');
-
-logo.alt = 'Beautiful Logo';
-
-console.log(logo.alt);
-console.log(logo.src); // absolute URL - same for href
-console.log(logo.getAttribute('src')); // relative URL - same for href
-
-console.log(logo.className);
-
-// Non standard
-console.log(logo.designer); // undefined
-
-logo.setAttribute('designer', 'Jonas');
-console.log(logo.getAttribute('designer'));
-
-// Data Attributes
-console.log(logo.dataset.versionNumber); // data-version-number="3"
-
-// Classes
-logo.classList.add('c', 'j');
-logo.classList.remove('c');
-logo.classList.toggle('c');
-logo.classList.contains('c');
-
-// Smooth Scrolling
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const h1 = document.querySelector('h1');
 
+const modal = document.querySelector('.modal');
+const overlay = document.querySelector('.overlay');
+const btnCloseModal = document.querySelector('.btn--close-modal');
+const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+
+// Smooth Scrolling to Section
 btnScrollTo.addEventListener('click', e => {
   // get the coordinates where to scroll
   const s1coords = section1.getBoundingClientRect();
@@ -116,7 +51,115 @@ btnScrollTo.addEventListener('click', e => {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
-const h1 = document.querySelector('h1');
+// Page Navigation - Scroll to sections
+// returns node list
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     const id = this.getAttribute('href');
+//     console.log(id);
+//     const section = document.querySelector(id);
+//     section.scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
+
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the element
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+
+  // Matching strategy
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    const section = document.querySelector(id);
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// DOM Traversing
+
+// Going downwards: child
+// console.log(h1.querySelectorAll('.highlight')); // all children
+// console.log(h1.childNodes);
+// console.log(h1.children);
+// console.log(h1.firstElementChild);
+// console.log(h1.lastElementChild);
+
+// // Going upwards: parents
+// console.log(h1.parentNode);
+// console.log(h1.parentElement);
+// h1.closest('.header').style.background = 'var(--gradient-secondary)';
+// h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+// // Going sideways: siblings
+// console.log(h1.previousElementSibling);
+// console.log(h1.nextElementSibling);
+
+// console.log(h1.previousSibling);
+// console.log(h1.previousSibling);
+
+// console.log(h1.parentElement.children); // all siblings
+
+// [...h1.parentElement.children].forEach(function (el) {
+//   if (el !== h1) {
+//     el.style.transform = 'scale(1.5)';
+//   }
+// });
+
+//creating and inserting elements
+const message = document.createElement('div');
+message.classList.add('cookie-message');
+message.innerHTML = `
+We use cookies for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button> 
+`;
+
+//header.prepend(message); // first child
+header.append(message); // last child
+
+//header.append(message.cloneNode(true)); // clones a node
+header.before(message);
+header.after(message);
+
+document.querySelector('.btn--close-cookie').addEventListener('click', () => {
+  message.remove();
+});
+
+// Inline Styles
+//message.style.backgroundColor = '#37383d';
+//message.style.width = '120%';
+
+// get hiddent styles
+//console.log(getComputedStyle(message).color);
+const messageHeight =
+  Number.parseFloat(getComputedStyle(message).height) + 40 + 'px';
+
+//document.documentElement.style.setProperty('--color-primary', 'orangered');
+
+// Attributes
+
+logo.alt = 'Beautiful Logo';
+
+// console.log(logo.alt);
+// console.log(logo.src); // absolute URL - same for href
+// console.log(logo.getAttribute('src')); // relative URL - same for href
+
+// console.log(logo.className);
+
+// Non standard
+//console.log(logo.designer); // undefined
+
+logo.setAttribute('designer', 'Jonas');
+//console.log(logo.getAttribute('designer'));
+
+// Data Attributes
+//console.log(logo.dataset.versionNumber); // data-version-number="3"
+
+// Classes
+logo.classList.add('c', 'j');
+logo.classList.remove('c');
+logo.classList.toggle('c');
+logo.classList.contains('c');
 
 // new way
 // h1.addEventListener('mouseenter', e => {
@@ -127,7 +170,7 @@ const h1 = document.querySelector('h1');
 // h1.onmouseenter = e => {
 //   alert('h1');
 // };
-
+/*
 const alertH1 = () => {
   alert('H1 - mouse enetered');
 
@@ -142,12 +185,35 @@ setTimeout(() => {
   h1.removeEventListener('mouseenter', alertH1);
 }, 3000);
 
-// Modal window
+// Bubbling and Capturing
+// rgb(255,255,255)
+// Random color generator
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
 
-const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCloseModal = document.querySelector('.btn--close-modal');
-const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+// bubbling from child to parent, when we click child parents also get the click event effect. We can stop the propogation with e.stopPropogation()
+// target and currentTarget(this)
+document.querySelector('.nav__link').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('link', e.target, e.currentTarget);
+
+  // stop propogation - stop the events for parents  - not a good idea to stop
+  //e.stopPropagation();
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('ul', e.target, e.currentTarget);
+});
+
+document.querySelector('.nav').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('nav', e.target, e.currentTarget);
+});
+*/
+// Modal window
 
 const openModal = function (e) {
   e.preventDefault();

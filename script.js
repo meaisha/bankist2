@@ -129,6 +129,20 @@ const handleHover = function (e) {
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
 
+// Implementing a Sticky navigation
+const posSection1 = section1.getBoundingClientRect();
+
+window.addEventListener('scroll', function (e) {
+  // get current scroll position
+  const posY = window.scrollY;
+
+  // check if reached the section to become sticky
+  if (posY > posSection1.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
+
+// Intersection Observer API
+
 // DOM Traversing
 
 // Going downwards: child

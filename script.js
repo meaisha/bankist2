@@ -126,22 +126,110 @@ const handleHover = function (e) {
 };
 
 // passing only "argument" into handler
-nav.addEventListener('mouseover', handleHover.bind(0.5));
-nav.addEventListener('mouseout', handleHover.bind(1));
+// nav.addEventListener('mouseover', handleHover.bind(0.5));
+// nav.addEventListener('mouseout', handleHover.bind(1));
 
-// Implementing a Sticky navigation
-const posSection1 = section1.getBoundingClientRect();
+// // Implementing a Sticky navigation
+// const posSection1 = section1.getBoundingClientRect();
 
-window.addEventListener('scroll', function (e) {
-  // get current scroll position
-  const posY = window.scrollY;
+// window.addEventListener('scroll', function (e) {
+//   // get current scroll position
+//   const posY = window.scrollY;
 
-  // check if reached the section to become sticky
-  if (posY > posSection1.top) nav.classList.add('sticky');
-  else nav.classList.remove('sticky');
-});
+//   // check if reached the section to become sticky
+//   if (posY > posSection1.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
 
 // Intersection Observer API
+// const observerCallback = function (entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   });
+// };
+// const observerOptions = {
+//   root: null, // looking at viewport
+//   //threshold: 0.1, // started intersecting viewport at 10%
+//   threshold: [0, 0.2], // multiple
+// };
+// const observer = new IntersectionObserver(observerCallback, observerOptions);
+// observer.observe(section1);
+
+// Sticky nav using observer
+const navHeight = nav.getBoundingClientRect().height;
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null, // looking at viewport
+  threshold: 0,
+  rootMargin: `-${navHeight}px`, //'-90px', // -90px before the header bottom line
+});
+
+headerObserver.observe(header);
+
+// Revealing Elements on Scroll
+// 1. add this classname to the sections
+// .section--hidden {
+//   opacity: 0;
+//   transform: translateY(8rem);
+// }
+// 2. remove the above class as we approach the section
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+
+  // check which section intersected
+  // trigger this only if the section is intersected
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null, // looking at viewport
+  threshold: 0.15, // 15% of the section intersected the viewport
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
+
+// Lazy loading images
+/* <img
+  src="img/digital-lazy.jpg" - small size image
+  data-src="img/digital.jpg" - original image
+  alt="Computer"
+  class="features__img lazy-img" // classname blurred
+/> */
+const imgTargets = document.querySelectorAll('img[data-src]');
+console.log(imgTargets);
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+
+  // Replace src with data-src
+  // then it will reload after
+  entry.target.src = entry.target.dataset.src;
+  // we listen to the reload and remove the classname
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+  console.log(entry);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '-200px', // before the threshold was reached
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
 
 // DOM Traversing
 
